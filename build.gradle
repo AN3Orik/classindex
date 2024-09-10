@@ -1,0 +1,110 @@
+plugins {
+    id 'idea'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+repositories {
+    mavenCentral()
+}
+
+version = "1.0"
+
+dependencies {
+    testImplementation("com.google.guava:guava:33.3.0-jre")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("org.assertj:assertj-core:3.26.3")
+}
+
+idea {
+    module {
+        excludeDirs += file('gradle')
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    doLast {
+        jar {
+            manifest {
+                attributes('Implementation-Title': project.name,
+                        'Implementation-Version': version,
+                        'Built-Date': new Date().toString(),
+                        'Built-By': System.getProperty('user.name'),
+                        'Built-JDK': System.getProperty('java.version'),
+                        'Source-Compatibility': project.sourceCompatibility,
+                        'Target-Compatibility': project.targetCompatibility
+                )
+            }
+        }
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "host.anzo"
+            artifactId = "classindex"
+            from components.java
+
+            pom {
+                name = "classindex"
+                description = "ClassIndex is an annotation processor which at compile-time generates an index of classes implementing given interface, classes annotated by given annotation or placed in a common package."
+                url = "https://github.com/AN3Orik/classindex"
+
+                licenses {
+                    license {
+                        name = 'Apache-2.0 license'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:https://github.com/AN3Orik/classindex.git'
+                    developerConnection = 'scm:git:https://github.com/AN3Orik/classindex.git'
+                    url = 'https://github.com/AN3Orik/classindex'
+                }
+
+                developers {
+                    developer {
+                        id = 'sentinel'
+                        name = 'Sławek Piotrowski'
+                        email = 'sentinel@atteo.com'
+                    }
+                    developer {
+                        id = 'ANZO'
+                        name = 'Anton Lasevich'
+                        email = 'mostproduct@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username "$mavenCentralUsernameToken"
+                password "$mavenCentralPasswordToken"
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = "$mavenCentralSigningKey"
+    def signingPassword = "$mavenCentralSigningKeyPassword"
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.maven
+}

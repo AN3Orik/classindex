@@ -13,14 +13,10 @@
  */
 package org.atteo.classindex;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.ServiceLoader;
-
 import org.atteo.classindex.processor.ClassIndexProcessor;
+
+import java.lang.annotation.*;
+import java.util.ServiceLoader;
 
 /**
  * Index all subclasses of the annotated class or package.
@@ -38,7 +34,8 @@ import org.atteo.classindex.processor.ClassIndexProcessor;
  * what {@link ServiceLoader} expects. So if all the subclasses have a zero-argument constructor
  * you can use {@link ServiceLoader}. For subclasses of given package index file is named
  * "jaxb.index", it is located inside the package folder and it's format is compatible with
- * what {@link javax.xml.bind.JAXBContext#newInstance(String) } expects.
+ * what {@link jakarta.xml.bind.JAXBContext#newInstance(String) } expects.
+ * what {@link jakarta.xml.bind.JAXBContext#newInstance(String) } expects.
  * </p>
  */
 @Documented
@@ -51,6 +48,7 @@ public @interface IndexSubclasses {
 	 * <p>
 	 * You can retrieve the stored Javadoc summary using {@link ClassIndex#getClassSummary(Class)}.
 	 * </p>
+	 * @return {@code true} if storing is successful, {@code false} otherwise
 	 */
 	boolean storeJavadoc() default false;
 }

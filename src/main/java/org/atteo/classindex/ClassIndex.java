@@ -20,11 +20,7 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
@@ -33,16 +29,16 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Access to the compile-time generated index of classes.
- * <p/>
+ * <p>
  * <p>
  * Use &#064;{@link IndexAnnotated} and &#064;{@link IndexSubclasses} annotations to force the classes to be indexed.
  * </p>
- * <p/>
+ * <p>
  * <p>
  * Keep in mind that the class is indexed only when it is compiled with
  * classindex.jar file in classpath.
  * </p>
- * <p/>
+ * <p>
  * <p>
  * Also to preserve class-index data when creating shaded jar you should use the following
  * Maven configuration:
@@ -76,7 +72,7 @@ import static java.util.stream.Collectors.toList;
  * </build>
  * }
  * </pre>
- * </p>
+ * <p>
  */
 public class ClassIndex {
 	public static final String SUBCLASS_INDEX_PREFIX = "META-INF/services/";
@@ -95,7 +91,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of subclasses of the given class.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The class must be annotated with {@link IndexSubclasses} for it's subclasses to be indexed
 	 * at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -110,7 +106,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of subclasses of the given class.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The class must be annotated with {@link IndexSubclasses} for it's subclasses to be indexed
 	 * at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -131,7 +127,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of subclasses of the given class.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The class must be annotated with {@link IndexSubclasses} for it's subclasses to be indexed
 	 * at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -146,7 +142,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of subclasses of the given class.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The class must be annotated with {@link IndexSubclasses} for it's subclasses to be indexed
 	 * at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -162,7 +158,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of classes from given package.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The package must be annotated with {@link IndexSubclasses} for the classes inside
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -177,7 +173,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of classes from given package.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The package must be annotated with {@link IndexSubclasses} for the classes inside
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -200,7 +196,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of classes from given package.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The package must be annotated with {@link IndexSubclasses} for the classes inside
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -215,7 +211,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of classes from given package.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The package must be annotated with {@link IndexSubclasses} for the classes inside
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -235,7 +231,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of classes annotated by given annotation.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The annotation must be annotated with {@link IndexAnnotated} for annotated classes
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -250,7 +246,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves a list of classes annotated by given annotation.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The annotation must be annotated with {@link IndexAnnotated} for annotated classes
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -267,7 +263,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of classes annotated by given annotation.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The annotation must be annotated with {@link IndexAnnotated} for annotated classes
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.
@@ -285,7 +281,7 @@ public class ClassIndex {
 
 	/**
 	 * Retrieves names of classes annotated by given annotation.
-	 * <p/>
+	 * <p>
 	 * <p>
 	 * The annotation must be annotated with {@link IndexAnnotated} for annotated classes
 	 * to be indexed at compile-time by {@link org.atteo.classindex.processor.ClassIndexProcessor}.

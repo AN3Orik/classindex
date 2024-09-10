@@ -13,14 +13,10 @@
  */
 package org.atteo.classindex;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.ServiceLoader;
-
 import org.atteo.classindex.processor.ClassIndexProcessor;
+
+import java.lang.annotation.*;
+import java.util.ServiceLoader;
 
 /**
  * Index all classes annotated by annotation annotated by this meta-annotation.

@@ -13,31 +13,13 @@
  */
 package org.atteo.classindex.processor;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Repeatable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import org.atteo.classindex.ClassIndex;
+import org.atteo.classindex.IndexAnnotated;
+import org.atteo.classindex.IndexSubclasses;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -47,10 +29,11 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-
-import org.atteo.classindex.ClassIndex;
-import org.atteo.classindex.IndexAnnotated;
-import org.atteo.classindex.IndexSubclasses;
+import java.io.*;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
+import java.util.*;
 
 /**
  * Generates index files for {@link ClassIndex}.
@@ -93,6 +76,7 @@ public class ClassIndexProcessor extends AbstractProcessor {
 
 	/**
 	 * Adds given annotations for indexing.
+	 * @param classes classes to add
 	 */
 	protected final void indexAnnotations(Class<?>... classes) {
 		for (Class<?> klass : classes) {
@@ -103,6 +87,7 @@ public class ClassIndexProcessor extends AbstractProcessor {
 
 	/**
 	 * Adds given classes for subclass indexing.
+	 * @param classes classed to add
 	 */
 	protected final void indexSubclasses(Class<?>... classes) {
 		for (Class<?> klass : classes) {
@@ -113,6 +98,7 @@ public class ClassIndexProcessor extends AbstractProcessor {
 
 	/**
 	 * Adds given package for indexing.
+	 * @param packages packages to add
 	 */
 	protected final void indexPackages(String... packages) {
 		Collections.addAll(indexedPackages, packages);

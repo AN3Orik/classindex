@@ -13,6 +13,13 @@
  */
 package org.atteo.classindex;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
+import org.atteo.classindex.processor.Important;
+import org.atteo.classindex.processor.Plugin;
+import org.atteo.classindex.second.ExtraPlugin;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,13 +28,6 @@ import java.net.URL;
 import java.util.ServiceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.atteo.classindex.processor.Important;
-import org.atteo.classindex.processor.Plugin;
-import org.atteo.classindex.second.ExtraPlugin;
-import org.junit.jupiter.api.Test;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
 
 public class ClassIndexTest {
 	@Test

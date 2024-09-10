@@ -15,12 +15,12 @@
  */
 package org.atteo.classindex;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
-
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

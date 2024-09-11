@@ -84,7 +84,7 @@ public class ClassIndex {
 		final ForkJoinWorkerThread worker = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
 		worker.setName("ClassIndex-FJP-" + worker.getPoolIndex());
 		return worker;
-	}, null, false);
+	}, null, true);
 
 	private ClassIndex() {
 	}
@@ -397,7 +397,7 @@ public class ClassIndex {
 			final Set<Class<?>> foundClasses = ConcurrentHashMap.newKeySet();
 			FORK_JOIN_POOL.submit(() -> entries.parallelStream().forEach(entry -> {
 				try {
-					foundClasses.add(Class.forName(entry, true, classLoader));
+					foundClasses.add(Class.forName(entry, false, classLoader));
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}

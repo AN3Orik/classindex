@@ -8,7 +8,7 @@
 
 ```groovy
 dependencies {
-    annotationProcessor("host.anzo:classindex:1.1")
-    implementation("host.anzo:classindex:1.1")
+    annotationProcessor("host.anzo:classindex:1.3")
+    implementation("host.anzo:classindex:1.3")
 }
 ```

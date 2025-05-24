@@ -14,6 +14,7 @@
 package host.anzo.classindex;
 
 import host.anzo.classindex.processor.ClassIndexProcessor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -23,9 +24,6 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinWorkerThread;
 
 import static java.util.stream.Collectors.toList;
 
@@ -81,12 +79,6 @@ public class ClassIndex {
 	public static final String ANNOTATED_INDEX_PREFIX = "META-INF/annotations/";
 	public static final String PACKAGE_INDEX_NAME = "jaxb.index";
 	public static final String JAVADOC_PREFIX = "META-INF/javadocs/";
-
-	private final static ForkJoinPool FORK_JOIN_POOL = new ForkJoinPool(Math.max(1, Runtime.getRuntime().availableProcessors()), pool -> {
-		final ForkJoinWorkerThread worker = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
-		worker.setName("ClassIndex-FJP-" + worker.getPoolIndex());
-		return worker;
-	}, null, true);
 
 	private ClassIndex() {
 	}
@@ -394,35 +386,46 @@ public class ClassIndex {
 		return new ArrayList<>(entries);
 	}
 
-	private static Set<Class<?>> findClasses(ClassLoader classLoader, List<String> entries) {
-		try {
-			final Set<Class<?>> foundClasses = ConcurrentHashMap.newKeySet();
-			FORK_JOIN_POOL.submit(() -> entries.parallelStream().forEach(entry -> {
-				try {
-					foundClasses.add(Class.forName(entry, false, classLoader));
-				} catch (ClassNotFoundException e) {
-					throw new RuntimeException(e);
-				}
-			})).get();
-			return foundClasses;
-		} catch (Exception e) {
-			throw new RuntimeException("Error while findClasses", e);
+	/**
+	 * Finds and loads classes by their fully qualified names.
+	 *
+	 * @param classLoader the class loader to use for loading classes
+	 * @param entries a list of fully qualified class names
+	 * @return a set of loaded classes
+	 * @throws RuntimeException if any class cannot be found
+	 */
+	private static @NotNull Set<Class<?>> findClasses(ClassLoader classLoader, @NotNull List<String> entries) {
+		Set<Class<?>> foundClasses = new LinkedHashSet<>();
+		for (String entry : entries) {
+			try {
+				foundClasses.add(Class.forName(entry, false, classLoader));
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
 		}
+		return foundClasses;
 	}
 
-	private static Set<Class<?>> findClassesInPackage(ClassLoader classLoader, String packageName, List<String> entries) {
-		final Set<Class<?>> foundClasses = ConcurrentHashMap.newKeySet();
-		try {
-			FORK_JOIN_POOL.submit(() -> entries.parallelStream().filter(entry -> !entry.contains("."))
-					.map(entry -> packageName + "." + entry).forEach(entry -> {
+	/**
+	 * Finds and loads classes in a specified package.
+	 *
+	 * @param classLoader the class loader to use for loading classes
+	 * @param packageName the package name to prepend to class names
+	 * @param entries a list of class names without package prefix
+	 * @return a set of loaded classes
+	 * @throws RuntimeException if any class cannot be found
+	 */
+	private static @NotNull Set<Class<?>> findClassesInPackage(ClassLoader classLoader, String packageName, @NotNull List<String> entries) {
+		Set<Class<?>> foundClasses = new LinkedHashSet<>();
+		for (String entry : entries) {
+			if (!entry.contains(".")) {
+				final String className = packageName + "." + entry;
 				try {
-					foundClasses.add(Class.forName(entry, false, classLoader));
+					foundClasses.add(Class.forName(className, false, classLoader));
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}
-			})).get();
-		} catch (Exception e) {
-			throw new RuntimeException("Error while findClassesInPackage", e);
+			}
 		}
 		return foundClasses;
 	}
